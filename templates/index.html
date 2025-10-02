@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>画像抽出ツール</title>
+    <title>ORICON NEWS画像抽出ツール</title>
     <style>
         body { font-family: sans-serif; margin: 2em; }
         .container { max-width: 960px; margin: 0 auto; }
@@ -21,7 +21,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>画像抽出ツール</h1>
+        <h1>ORICON NEWS画像抽出ツール</h1>
         <form method="post" id="scrape-form">
             <input type="url" name="url" placeholder="画像の抽出元URLを入力してください" value="{{ url or '' }}" required>
             <button type="submit">抽出開始</button>
@@ -59,4 +59,5 @@
         });
     </script>
 </body>
+
 </html>
