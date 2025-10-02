@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>画像抽出ツール</title>
+    <style>
+        body { font-family: sans-serif; margin: 2em; }
+        .container { max-width: 960px; margin: 0 auto; }
+        input[type="url"] { width: 100%; padding: 0.5em; font-size: 1em; margin-bottom: 1em; box-sizing: border-box; }
+        button { padding: 0.7em 1.5em; font-size: 1em; cursor: pointer; }
+        .results { margin-top: 2em; }
+        .results h2 { border-bottom: 2px solid #eee; padding-bottom: 0.5em; }
+        .image-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1em; }
+        /* ▼▼▼ 修正箇所 ▼▼▼ */
+        .image-grid a { display: block; } /* リンクとしてブロック表示にする */
+        .image-grid img { width: 100%; height: auto; border: 1px solid #ddd; border-radius: 4px; vertical-align: bottom; } /* vertical-alignを追加 */
+        /* ▲▲▲ 修正箇所 ▲▲▲ */
+        .loading { display: none; margin-top: 1em; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>画像抽出ツール</h1>
+        <form method="post" id="scrape-form">
+            <input type="url" name="url" placeholder="画像の抽出元URLを入力してください" value="{{ url or '' }}" required>
+            <button type="submit">抽出開始</button>
+        </form>
+
+        <div id="loading-message" class="loading">
+            <p>画像を抽出中です... しばらくお待ちください。</p>
+        </div>
+
+        {% if error %}
+            <p style="color: red;">{{ error }}</p>
+        {% endif %}
+
+        {% if results %}
+        <div class="results">
+            <h2>抽出結果 ({{ results|length }}件) - 画像をタップすると保存できます</h2>
+            <div class="image-grid">
+                {# ▼▼▼ 修正箇所 ▼▼▼ #}
+                {% for image_path in results %}
+                    {# <a>タグで<img>を囲み、download属性を追加します #}
+                    {# download属性には、保存するときのファイル名を指定します #}
+                    <a href="{{ url_for('static', filename=image_path) }}" download="{{ image_path.split('/')[-1] }}">
+                        <img src="{{ url_for('static', filename=image_path) }}" alt="抽出された画像">
+                    </a>
+                {% endfor %}
+                {# ▲▲▲ 修正箇所 ▲▲▲ #}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.getElementById('scrape-form').addEventListener('submit', function() {
+            document.getElementById('loading-message').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
